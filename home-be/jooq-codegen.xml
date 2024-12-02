@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+  <jdbc>
+    <driver>org.postgresql.Driver</driver>
+    <url>jdbc:postgresql://localhost:5432/home-pg</url>
+    <user>postgres</user>
+    <password>123456</password>
+  </jdbc>
+  <generator>
+    <!--  Use the ScalaGenerator to generate scala code  -->
+    <name>org.jooq.codegen.ScalaGenerator</name>
+
+    <database>
+      <name>org.jooq.meta.postgres.PostgresDatabase</name>
+      <inputSchema>general</inputSchema>
+    </database>
+    <target>
+      <packageName>com.momo.family.home</packageName>
+      <directory>./src/main/jooq</directory>
+    </target>
+  </generator>
+</configuration>
