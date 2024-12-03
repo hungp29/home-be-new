@@ -1,0 +1,2 @@
+ALTER TABLE transaction
+    ADD COLUMN processed BOOLEAN DEFAULT TRUE;

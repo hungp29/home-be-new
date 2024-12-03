@@ -1,0 +1,2 @@
+ALTER TABLE family
+    ADD COLUMN timezone VARCHAR(100);

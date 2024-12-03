@@ -1,0 +1,21 @@
+services:
+  flyway:
+    image: flyway/flyway
+    container_name: flyway_migration
+    # command: -url=jdbc:postgresql://db:5432/home-pg-new -schemas=general -user=postgres -password=123456 -connectRetries=60 migrate
+    command: migrate
+    volumes:
+      - ./scripts:/flyway/scripts
+      - ./conf:/flyway/conf
+    environment:
+      - FLYWAY_PLACEHOLDERS_DATABASE_PORT=5432
+      - FLYWAY_PLACEHOLDERS_DATABASE_HOST=home_db
+      - FLYWAY_PLACEHOLDERS_DATABASE_NAME=home-pg-new
+      - FLYWAY_PLACEHOLDERS_USER=postgres
+      - FLYWAY_PLACEHOLDERS_PASSWORD=123456
+      - FLYWAY_PLACEHOLDERS_SCHEMAS=general
+    networks:
+      - home-shared_network
+networks:
+  home-shared_network:
+    external: true

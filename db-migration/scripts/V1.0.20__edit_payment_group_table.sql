@@ -1,0 +1,2 @@
+ALTER TABLE payment_group
+    ADD COLUMN apply_all BOOLEAN DEFAULT TRUE;
