@@ -1,8 +1,8 @@
-package configurations
+package com.momo.family.home.configurations
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
-import org.jooq.{DSLContext, SQLDialect}
 import org.jooq.impl.DSL
+import org.jooq.{DSLContext, SQLDialect}
 import play.api.Configuration
 
 import javax.inject.{Inject, Singleton}

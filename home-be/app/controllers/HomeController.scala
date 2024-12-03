@@ -1,19 +1,14 @@
 package controllers
 
-import configurations.JooqContext
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
 
-import javax.inject._
-import play.api._
-import play.api.mvc._
+import javax.inject.{Inject, Singleton}
 
 /** This controller creates an `Action` to handle HTTP requests to the
   * application's home page.
   */
 @Singleton
-class HomeController @Inject() (
-    val controllerComponents: ControllerComponents,
-    val jooqContext: JooqContext
-) extends BaseController {
+class HomeController @Inject() (val components: ControllerComponents) extends AbstractController(components) {
 
   /** Create an Action to render an HTML page.
     *
@@ -21,10 +16,7 @@ class HomeController @Inject() (
     * will be called when the application receives a `GET` request with
     * a path of `/`.
     */
-  def index() = Action { implicit request: Request[AnyContent] =>
-    val result = jooqContext.dslContext
-      .selectFrom("application")
-      .fetch()
+  def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
 }

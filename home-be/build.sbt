@@ -1,4 +1,3 @@
-import com.typesafe.config.ConfigFactory
 import scala.sys.process.Process
 
 name := """home-be"""
@@ -7,7 +6,7 @@ organization := "com.momo.family.home"
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, FlywayPlugin)
+  .enablePlugins(PlayScala)
   .settings(
     Compile / unmanagedSourceDirectories ++= Seq(
       baseDirectory.value / "app",
@@ -19,12 +18,6 @@ lazy val root = (project in file("."))
       baseDirectory.value / "src" / "main" / "resources"
     )
   )
-//  .settings(
-//    flywayUrl := flywayDbConfig.getString("flyway.url"),
-//    flywayUser := flywayDbConfig.getString("flyway.user"),
-//    flywayPassword := flywayDbConfig.getString("flyway.password"),
-//    flywaySchemas := Seq(flywayDbConfig.getString("flyway.schema"))
-//  )
 
 scalaVersion := "2.13.15"
 
@@ -44,14 +37,6 @@ libraryDependencies ++= Seq(
   "org.jooq" % "jooq-meta" % Common.jooqVersion,
   "org.jooq" % "jooq-codegen" % Common.jooqVersion
 )
-
-// Flyway
-libraryDependencies += "org.flywaydb" % "flyway-core" % Common.flywaydbVersion
-
-//libraryDependencies ++= Seq(
-//  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.3",
-//  "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.3"
-//)
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.momo.family.home.controllers._"
@@ -75,37 +60,3 @@ jooqCodegen := {
     println("JOOQ Codegen completed successfully!")
   }
 }
-
-//flywayUrl := "jdbc:postgresql://localhost:5432/home-pg-new"
-//flywayUser := "postgres"
-//flywayPassword := "123456"
-//flywayLocations += "org.flywaydb.sample.migration"
-//flywaySchemas := Seq("general")
-
-// Task to run Flyway migrations
-//lazy val databaseConfig = {
-//  val config = ConfigFactory.parseFile(new java.io.File("conf/application.conf"))
-//  val db = config.getConfig("flyway")
-//  Map(
-//    "flyway.url" -> db.getString("url"),
-//    "flyway.user" -> db.getString("user"),
-//    "flyway.password" -> db.getString("password"),
-//    "flyway.schemas" -> db.getStringList("schemas")
-//  )
-//}
-
-lazy val flywayDbConfig = {
-  val config = ConfigFactory.parseFile(new java.io.File("conf/application.conf"))
-  val flyway = config.getConfig("flyway")
-
-  println(flyway)
-
-  flyway
-}
-//
-//root.settings(
-//  flywayUrl := flywayDbConfig.getString("flyway.url"),
-//  flywayUser := flywayDbConfig.getString("flyway.user"),
-//  flywayPassword := flywayDbConfig.getString("flyway.password")
-////  flywaySchemas := Seq(databaseConfig("flyway.schemas"))
-//)

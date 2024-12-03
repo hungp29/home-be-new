@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres
+    container_name: 'home_db'
+    restart: always
+    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=home-pg
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - 5432:5432
+    networks:
+      - home-shared_network
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:7.4-rc2-alpine3.20
+    container_name: 'home_redis'
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data-local
+    networks:
+      - home-shared_network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  rabbitmq:
+    image: rabbitmq:3.13.7-alpine
+    container_name: 'home_rabbitmq'
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    secrets:
+      - rabbitmq-password
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_VHOST=rabbitmq
+    command: sh -c "RABBITMQ_DEFAULT_PASS=$(cat /run/secrets/rabbitmq-password) rabbitmq-server"
+    networks:
+      - home-shared_network
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  db-data:
+  cache:
+    driver: local
+  rabbitmq-data:
+secrets:
+  db-password:
+    file: local/secrets/local-pass.txt
+  rabbitmq-password:
+    file: local/secrets/local-pass.txt
+networks:
+  home-shared_network:
+    external: true
