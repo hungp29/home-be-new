@@ -1,14 +1,30 @@
 package com.momo.family.home.base
 
 import com.momo.family.home.base.ImplicitHttpStatus.RichErrorResult
-import play.api.libs.json.{JsPath, Json, JsonValidationError}
-import play.api.mvc.{InjectedController, Result, Results}
+import play.api.libs.json.{JsPath, JsValue, Json, JsonValidationError, Reads}
+import play.api.mvc.{Action, InjectedController, Request, Result, Results}
 
 import scala.collection.Seq
 
 /** Base controller class.
   */
 trait BaseController extends InjectedController {
+
+  /** Validate JSON.
+    *
+    * @param handleValid The handle valid function
+    * @tparam T The type of model that the JSON should be validated to
+    * @return The action
+    */
+  def validateJson[T](handleValid: T => Result)(implicit reads: Reads[T]): Action[JsValue] = Action(parse.json) {
+    request =>
+      request.body
+        .validate[T]
+        .fold(
+          handleJsonError,
+          handleValid
+        )
+  }
 
   /** Handle JSON error.
     *

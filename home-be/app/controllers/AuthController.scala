@@ -2,8 +2,8 @@ package controllers
 
 import com.momo.family.home.base.BaseController
 import com.momo.family.home.models.AuthenticationModel
-import play.api.libs.json.{JsSuccess, JsValue, Json}
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, ControllerComponents}
 
 import javax.inject.{Inject, Singleton}
 
@@ -12,12 +12,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class AuthController @Inject() (val components: ControllerComponents) extends BaseController {
 
-  def authentication: Action[JsValue] = Action(parse.json) { request =>
-    request.body
-      .validate[AuthenticationModel]
-      .fold(
-        handleJsonError,
-        authenticationModel => Ok(Json.toJson(authenticationModel))
-      )
+  def authentication: Action[JsValue] = validateJson[AuthenticationModel] { authenticationModel =>
+    Ok(Json.toJson(authenticationModel))
   }
 }
